@@ -5,12 +5,14 @@ description: >-
   Auto-triggers whenever the prompt involves: C#, csharp, .NET, dotnet, Blazor, ASP.NET, EF Core, Entity Framework,
   LINQ, DTO, Controller, Service, Repository, CancellationToken, zero-allocation, ArrayPool, Span, or any .cs file.
   Auto-triggers for RFC 9457, RFC 7807, ProblemDetails, IProblemDetailsService, application/problem+json, IExceptionHandler.
+  Auto-triggers for mandatory test cases, test case generation, test table, xUnit, Shouldly, Testcontainers, repository tests.
   Tự động kích hoạt khi prompt tiếng Việt liên quan đến: viết code C#, tạo DTO, tạo controller, review code .NET,
   refactor C#, xử lý async C#, tối ưu bảng Blazor, WAI-ARIA, xử lý lỗi exception, nullable reference types,
   tối ưu query EF Core, N+1, dependency injection, captive dependency, logging Serilog/APM, bảo mật OWASP,
   Polly resilience, Options pattern, unit test xUnit, WebApplicationFactory, quản trị breaking change, idempotency, ADR,
   zero allocation, ArrayPool, RecyclableMemoryStream, Span, ReadOnlySpan, Memory, BenchmarkDotNet, tối ưu bộ nhớ,
-  chuẩn lỗi API RFC 9457, RFC 7807, Problem Details trong .NET, IExceptionHandler, trả về lỗi API chuẩn.
+  chuẩn lỗi API RFC 9457, RFC 7807, Problem Details trong .NET, IExceptionHandler, trả về lỗi API chuẩn,
+  viết test case, sinh code test, bảng test case, test case repository, luồng tiền, state machine, idempotency test.
   Agent MUST read this SKILL.md before generating or editing C# code.
 ---
 
@@ -45,6 +47,7 @@ Skill này áp dụng mô hình **Progressive Disclosure**: file `SKILL.md` này
 | **XVII** | **Thiết Kế Bền Vững & Quản Trị Convention** | Rule 38 - 42 | [16-design-governance.md](./references/16-design-governance.md) |
 | **XVIII** | **Quản Lý Bộ Nhớ & Zero-Allocation** | Rule 43 - 45 | [17-high-performance-zero-allocation.md](./references/17-high-performance-zero-allocation.md) |
 | **XIX** | **Chuẩn Lỗi API RFC 9457 (Problem Details)** | Rule 46 | [18-rfc9457-api-problem-details.md](./references/18-rfc9457-api-problem-details.md) |
+| **XX** | **Test Case Bắt Buộc & Sinh Code Test** | Rule 47 | [19-mandatory-test-cases-codegen.md](./references/19-mandatory-test-cases-codegen.md) |
 
 ---
 
@@ -153,6 +156,16 @@ Skill này áp dụng mô hình **Progressive Disclosure**: file `SKILL.md` này
 - **Span & Zero-Alloc Slicing**: Dùng `ReadOnlySpan<T>` cắt chuỗi/dữ liệu thay cho `Substring()` và `Split()`; parse dữ liệu qua `ISpanParsable<T>`; định dạng chuỗi hot-path bằng `string.Create` và `stackalloc` an toàn (ngưỡng tối đa ≤ 256 bytes) (Rule 44).
 - **Triệt tiêu Boxing & Closure**: Cấm `enum.ToString()` trên hot-path; dùng `static lambda` (`static (x) => ...`) và truyền state qua tham số argument để tránh compiler tạo closure class `DisplayClass` trên Heap; cấm LINQ trong hot loop; mọi tối ưu hiệu năng phải được chứng minh định lượng bằng `BenchmarkDotNet` với `[MemoryDiagnoser]` đạt `Allocated = 0 B` (Rule 45).
 
+### 18. Chuẩn Lỗi API RFC 9457 ([Chi tiết](./references/18-rfc9457-api-problem-details.md))
+- Mọi API trả về lỗi ($4xx, 5xx$) bắt buộc dùng `Content-Type: application/problem+json` với cấu trúc chuẩn 5 trường (`type`, `title`, `status`, `detail`, `instance`) kèm `traceId`, `timestamp`, `errorCode` và `invalidParams` (Rule 46).
+- Tích hợp qua `AddProblemDetails()`, `IExceptionHandler` (.NET 8+), không lộ StackTrace/SQL ra ngoài production.
+
+### 19. Test Case Bắt Buộc & Sinh Code Test ([Chi tiết](./references/19-mandatory-test-cases-codegen.md))
+- **Thay đổi quan trọng** (Repository, luồng tiền, chuyển trạng thái đơn/thanh toán, logic phân nhánh lõi, idempotency, tích hợp đối tác, bug fix): **BẮT BUỘC quy trình 2 bước** (Rule 47).
+- **Bước 1 — Viết bảng test case**: Xuất ra file markdown `docs/test-case-<tinh-nang>.md` (cover đủ happy path, negative, edge, idempotent, và concurrency với repository).
+- **Bước 2 — Sinh code test ngay**: Viết file code test **`.cs`** trong **test project** của solution (`{Project}.Tests` hoặc `{Project}.IntegrationTests`), ánh xạ từng dòng test case thành các method `[Fact]`/`[Theory]` với xUnit + Shouldly + NSubstitute + Testcontainers.
+- ⚠️ **CẤM**: Chỉ nộp bảng `.md` mà không có file test `.cs`; CẤM viết code C# vào trong file `docs/test-case-*.md` hoặc để lẫn code test trong `docs/`.
+
 ---
 
 ## ✅ Checklist Trước Khi Kết Thúc Task
@@ -218,5 +231,6 @@ Skill này áp dụng mô hình **Progressive Disclosure**: file `SKILL.md` này
 - [ ] **Zero-Allocation Slicing**: Cắt chuỗi và parse dữ liệu hot-path dùng `ReadOnlySpan<char>` / `ISpanParsable<T>` thay cho `Substring`/`Split`; dựng chuỗi bằng `string.Create`; `stackalloc` chỉ dùng với kích thước an toàn ≤ 256 bytes (Rule 44)
 - [ ] **Hot-Path Optimization**: Dùng `static lambda` chống closure allocation; không boxing enum/struct; không dùng LINQ trong hot loop; tối ưu hiệu năng có số liệu chứng minh từ `BenchmarkDotNet` với `[MemoryDiagnoser]` đạt `Allocated = 0 B` (Rule 45)
 - [ ] **RFC 9457 Problem Details**: Mọi API trả về lỗi ($4xx, 5xx$) có header `Content-Type: application/problem+json`; cấu trúc đủ 5 trường chuẩn (`type`, `title`, `status`, `detail`, `instance`); mở rộng kèm `traceId`, `timestamp`, `errorCode` và `invalidParams` (cho FluentValidation); dùng `IExceptionHandler` (.NET 8+) và `AddProblemDetails()`; Controller có `[ProducesResponseType(typeof(ProblemDetails), ...)]`; tuyệt đối không trả anonymous error hay lộ stacktrace/SQL (Rule 46)
+- [ ] **Mandatory Test Cases & Code Generation**: Thay đổi Repository hoặc nghiệp vụ quan trọng (tiền, trạng thái, idempotency, logic lõi, bug fix) đã tuân thủ quy trình 2 bước: (1) xuất bảng test case ra `docs/test-case-*.md`, và (2) sinh file code test `.cs` tương ứng trong test project (`{Project}.Tests`/`IntegrationTests`), không viết code C# vào file `.md` (Rule 47)
 
 

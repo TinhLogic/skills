@@ -41,6 +41,7 @@ Bộ quy chuẩn lập trình bắt buộc dành cho mọi mã nguồn C# / .NET
 | **XVII** | **Thiết Kế Bền Vững & Quản Trị Convention** | Rule 38 - 42 | [`16-design-governance.md`](./references/16-design-governance.md) |
 | **XVIII** | **Quản Lý Bộ Nhớ & Zero-Allocation** | Rule 43 - 45 | [`17-high-performance-zero-allocation.md`](./references/17-high-performance-zero-allocation.md) |
 | **XIX** | **Chuẩn Lỗi API RFC 9457 (Problem Details)** | Rule 46 | [`18-rfc9457-api-problem-details.md`](./references/18-rfc9457-api-problem-details.md) |
+| **XX** | **Test Case Bắt Buộc & Sinh Code Test** | Rule 47 | [`19-mandatory-test-cases-codegen.md`](./references/19-mandatory-test-cases-codegen.md) |
 
 ---
 
@@ -95,6 +96,12 @@ Bộ quy chuẩn lập trình bắt buộc dành cho mọi mã nguồn C# / .NET
    - Mượn buffer tạm (≥ 1KB) từ `ArrayPool<T>.Shared` và luôn trả trong khối `finally` (`clearArray: true` nếu chứa dữ liệu nhạy cảm); thay `new MemoryStream()` bằng `Microsoft.IO.RecyclableMemoryStream` cho các tác vụ nén, I/O lớn chống phân mảnh LOH và Gen 2 GC pauses.
    - Thao tác cắt chuỗi và parse dữ liệu hot-path bằng `ReadOnlySpan<char>` và `ISpanParsable<T>` thay vì `Substring()` / `Split()`; dựng chuỗi bằng `string.Create` hoặc `stackalloc` an toàn (ngưỡng tối đa ≤ 256 bytes).
    - Triệt tiêu boxing (cấm `enum.ToString()` trên hot-path); dùng `static lambda` (`static (x) => ...`) và truyền state qua tham số để tránh sinh closure `DisplayClass`; cấm LINQ trong hot loop; kiểm chứng định lượng bằng `BenchmarkDotNet` với `[MemoryDiagnoser]` đạt `Allocated = 0 B`.
+
+10. **Test Case Bắt Buộc & Sinh Code Test**:
+    - Với mọi thay đổi ở tầng Repository hoặc thay đổi quan trọng (luồng tiền, trạng thái, logic lõi, idempotency, bug fix), **bắt buộc tuân thủ quy trình 2 bước** (Rule 47).
+    - **Bước 1**: Viết bảng test case xuất ra file markdown `docs/test-case-<tinh-nang>.md` (đủ happy path, negative, edge, idempotent, concurrency).
+    - **Bước 2**: Sinh ngay code test thực thi tương ứng (`.cs`) trong test project (`{Project}.Tests` hoặc `{Project}.IntegrationTests`) dùng xUnit, Shouldly, NSubstitute, Testcontainers.
+    - ⚠️ **Tuyệt đối CẤM**: Chỉ nộp bảng `.md` mà thiếu file test `.cs`; CẤM viết code C# vào trong file `docs/test-case-*.md`.
 
 ---
 
@@ -159,6 +166,7 @@ Mandatory enterprise coding standards and guidelines for all C# / .NET, ASP.NET 
 | **XVII** | **Sustainable Design & Convention Governance** | Rule 38 - 42 | [`16-design-governance.md`](./references/16-design-governance.md) |
 | **XVIII** | **Memory Management & Zero-Allocation** | Rule 43 - 45 | [`17-high-performance-zero-allocation.md`](./references/17-high-performance-zero-allocation.md) |
 | **XIX** | **RFC 9457 API Problem Details** | Rule 46 | [`18-rfc9457-api-problem-details.md`](./references/18-rfc9457-api-problem-details.md) |
+| **XX** | **Mandatory Test Cases & Code Generation** | Rule 47 | [`19-mandatory-test-cases-codegen.md`](./references/19-mandatory-test-cases-codegen.md) |
 
 ---
 
@@ -213,6 +221,12 @@ Mandatory enterprise coding standards and guidelines for all C# / .NET, ASP.NET 
    - Rent temporary buffers (≥ 1KB) from `ArrayPool<T>.Shared` and always return them in a `finally` block (`clearArray: true` for sensitive data); replace `new MemoryStream()` with `Microsoft.IO.RecyclableMemoryStream` for large I/O and compression to prevent LOH fragmentation and Gen 2 GC pauses.
    - Slice and parse hot-path text/data using `ReadOnlySpan<char>` and `ISpanParsable<T>` instead of `Substring()` / `Split()`; construct strings via `string.Create` or safe `stackalloc` (threshold ≤ 256 bytes).
    - Eliminate boxing (no `enum.ToString()` on hot paths); use `static lambda` (`static (x) => ...`) and pass state through arguments to prevent compiler-generated `DisplayClass` closure allocations; avoid LINQ in hot loops; quantitatively prove zero allocations using `BenchmarkDotNet` with `[MemoryDiagnoser]` showing `Allocated = 0 B`.
+
+10. **Mandatory Test Cases & Code Generation**:
+    - For any modification in the Repository layer or critical business logic (money flow, state machines, core branching, idempotency, bug fixes), **mandatory 2-step process** (Rule 47).
+    - **Step 1**: Write test cases in a Markdown table exported to `docs/test-case-<feature>.md` (covering happy path, negative, edge, idempotent, and concurrency).
+    - **Step 2**: Immediately generate executable test code files (`.cs`) in the solution's test project (`{Project}.Tests` or `{Project}.IntegrationTests`) using xUnit, Shouldly, NSubstitute, and Testcontainers.
+    - ⚠️ **Strictly PROHIBITED**: Submitting only `.md` test tables without corresponding `.cs` test files; writing C# test code inside `docs/test-case-*.md`.
 
 ---
 
