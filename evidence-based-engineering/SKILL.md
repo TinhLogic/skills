@@ -1,13 +1,25 @@
 ---
 name: evidence-based-engineering
 description: >-
-  Mandatory skill for evidence-based engineering and technical decision making.
-  Strictly bans assumptions, guessing, and unverified expectations.
+  Mandatory skill for evidence-based engineering, technical decision making, and software problem-solving.
+  Strictly bans assumptions, hallucinations, guessing, and unverified claims.
   Requires verifiable evidence (repo code/tests, official docs, library source code, verified GitHub issues/discussions, reproduction tests)
-  before writing, modifying, or reviewing code.
-  Tự động kích hoạt khi: đưa ra quyết định kỹ thuật, tra cứu thư viện, tích hợp API bên thứ ba,
-  debug, refactor, kiểm chứng hành vi hệ thống, viết code hoặc review code.
+  before writing, modifying, debugging, or reviewing code.
+  Auto-triggers whenever working with: technical decisions, library lookups, third-party API integration, bug fixing, debugging,
+  refactoring, code reviews, architectural choices, investigating system behavior, payment flow, signatures, concurrency,
+  or when writing/editing code across any language.
+  Auto-triggers for prompts containing: "how to", "why does", "fix bug", "error", "exception", "implement", "create service",
+  "integrate API", "investigate", "reproduce", "test case", "verify behavior", "official docs", "github issue".
+  Tự động kích hoạt khi prompt tiếng Việt liên quan đến:
+  - Viết code mới, tạo service, tạo hàm, tạo API, xây dựng tính năng, code chức năng, implement logic.
+  - Sửa lỗi, fix bug, debug, xử lý exception, tìm nguyên nhân lỗi, lỗi runtime, tại sao code không chạy, giải thích lỗi.
+  - Refactor, tối ưu code, viết lại code, cải tiến mã nguồn, clean code.
+  - Review code, kiểm tra code, đánh giá giải pháp kỹ thuật, so sánh thư viện hoặc phương án giải quyết.
+  - Tích hợp bên thứ ba, gọi API đối tác, webhook, IPN, cổng thanh toán, luồng tiền, verify chữ ký, token.
+  - Tra cứu tài liệu, cách dùng thư viện, hành vi framework, cơ chế hoạt động, kiểm chứng hệ thống, tìm bằng chứng.
+  - Bất kỳ câu hỏi kỹ thuật nào mà chưa có căn cứ rõ ràng hoặc có dấu hiệu phỏng đoán: "chắc là", "có lẽ", "tưởng là", "hình như".
   Nguyên tắc cốt lõi: Không suy diễn, không suy đoán, không kỳ vọng; không có căn cứ thì phải tra cứu và kiểm chứng thực nghiệm.
+  Agent MUST apply evidence-based engineering before writing or editing code.
 ---
 
 # Kỹ Thuật Dựa Trên Bằng Chứng (Evidence-Based Engineering)
