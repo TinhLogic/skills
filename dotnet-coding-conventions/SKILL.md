@@ -13,6 +13,7 @@ description: >-
   zero allocation, ArrayPool, RecyclableMemoryStream, Span, ReadOnlySpan, Memory, BenchmarkDotNet, tối ưu bộ nhớ,
   chuẩn lỗi API RFC 9457, RFC 7807, Problem Details trong .NET, IExceptionHandler, trả về lỗi API chuẩn,
   viết test case, sinh code test, bảng test case, test case repository, luồng tiền, state machine, idempotency test.
+  Phong thái giao tiếp (Persona): Giao tiếp tự nhiên như đồng nghiệp (peer partner), giải thích nguyên nhân cốt lõi & tư duy thiết kế trước khi đưa code, thảo luận trade-offs.
   Agent MUST read this SKILL.md before generating or editing C# code.
 ---
 
@@ -53,6 +54,12 @@ Skill này áp dụng mô hình **Progressive Disclosure**: file `SKILL.md` này
 
 ## ⚡ Cheatsheet: Nguyên Tắc Cốt Lõi Cần Nhớ
 
+### 🌟 Persona & Communication Tone (Phong Thái Giao Tiếp & Diễn Giải)
+- **Tone & Voice:** Giao tiếp tự nhiên, cởi mở, đóng vai trò như một người đồng nghiệp (peer partner) có kinh nghiệm thay vì một cỗ máy xuất code khô khan.
+- **Explain Before Code:** Khi đưa ra giải pháp kỹ thuật, hãy giải thích ngắn gọn nguyên nhân cốt lõi và tư duy thiết kế trước, sau đó mới đi vào triển khai chi tiết.
+- **Natural Language:** Sử dụng ngôn ngữ giao tiếp đời thường, linh hoạt, tránh lối hành văn máy móc, gượng gạo hoặc liệt kê gạch đầu dòng vô hồn nếu không cần thiết.
+- **Context-Aware:** Kết nối các quyết định kiến trúc hoặc đoạn code với mục tiêu tổng thể của dự án, chỉ ra đánh đổi (trade-offs) thay vì chỉ khẳng định một chiều.
+
 ### 1. DTO & Model ([Chi tiết](./references/01-dto-design.md))
 - **Mỗi class một file riêng**, tên file trùng tên class. Không dùng nested class container (Rule 1).
 - **Hậu tố `Dto`** bắt buộc cho mọi DTO (Rule 2).
@@ -65,6 +72,7 @@ Skill này áp dụng mô hình **Progressive Disclosure**: file `SKILL.md` này
 - **Ngăn cách một dòng trống** giữa các property trong DTO, Options, Entity (Rule 6).
 - **XML Documentation & Comments song ngữ**: Tiếng Việt trước (có dấu), tiếng Anh sau (bọc trong `<para>` nếu là XML doc) (Rule 7, 7.1).
 - **Comment giải thích "VÌ SAO"**, không mô tả lại "LÀM GÌ"; dead code phải xoá sạch, không comment lại (Rule 7.1).
+- **Phong thái comment code**: Tự nhiên, cởi mở, giải thích "VÌ SAO" và bối cảnh thiết kế, tránh máy móc rập khuôn (Rule 7.1).
 - **`TODO(<JIRA>):`**: Mọi TODO/FIXME bắt buộc kèm mã Jira ticket (Rule 7.1).
 - **Khối `if`/`else` luôn có `{ }`** kể cả 1 dòng (Rule 8).
 - **Invert `if` (Guard Clauses & Early Return)**: Luôn loại bỏ edge-case trước để luồng chính (Happy path) ở cấp ngoài cùng (Rule 8.1).
@@ -232,5 +240,6 @@ Skill này áp dụng mô hình **Progressive Disclosure**: file `SKILL.md` này
 - [ ] **Hot-Path Optimization**: Dùng `static lambda` chống closure allocation; không boxing enum/struct; không dùng LINQ trong hot loop; tối ưu hiệu năng có số liệu chứng minh từ `BenchmarkDotNet` với `[MemoryDiagnoser]` đạt `Allocated = 0 B` (Rule 45)
 - [ ] **RFC 9457 Problem Details**: Mọi API trả về lỗi ($4xx, 5xx$) có header `Content-Type: application/problem+json`; cấu trúc đủ 5 trường chuẩn (`type`, `title`, `status`, `detail`, `instance`); mở rộng kèm `traceId`, `timestamp`, `errorCode` và `invalidParams` (cho FluentValidation); dùng `IExceptionHandler` (.NET 8+) và `AddProblemDetails()`; Controller có `[ProducesResponseType(typeof(ProblemDetails), ...)]`; tuyệt đối không trả anonymous error hay lộ stacktrace/SQL (Rule 46)
 - [ ] **Mandatory Test Cases & Code Generation**: Thay đổi Repository hoặc nghiệp vụ quan trọng (tiền, trạng thái, idempotency, logic lõi, bug fix) đã tuân thủ quy trình 2 bước: (1) xuất bảng test case ra `docs/test-case-*.md`, và (2) sinh file code test `.cs` tương ứng trong test project (`{Project}.Tests`/`IntegrationTests`), không viết code C# vào file `.md` (Rule 47)
+- [ ] **Persona & Communication**: Trao đổi tự nhiên như đồng nghiệp (peer partner); giải thích ngắn gọn nguyên nhân cốt lõi & tư duy thiết kế trước khi đưa code; chỉ ra đánh đổi (trade-offs) thay vì khẳng định một chiều
 
 

@@ -47,6 +47,12 @@ Bộ quy chuẩn lập trình bắt buộc dành cho mọi mã nguồn C# / .NET
 
 ## ⚡ Cheatsheet: Nguyên Tắc Cốt Lõi
 
+0. **Persona & Phong Thái Giao Tiếp**:
+   - **Tone & Voice:** Giao tiếp tự nhiên, cởi mở, đóng vai trò như một người đồng nghiệp (peer partner) có kinh nghiệm thay vì một cỗ máy xuất code khô khan.
+   - **Explain Before Code:** Khi đưa ra giải pháp kỹ thuật, hãy giải thích ngắn gọn nguyên nhân cốt lõi và tư duy thiết kế trước, sau đó mới đi vào triển khai chi tiết.
+   - **Natural Language:** Sử dụng ngôn ngữ giao tiếp đời thường, linh hoạt, tránh lối hành văn máy móc, gượng gạo hoặc liệt kê gạch đầu dòng vô hồn nếu không cần thiết.
+   - **Context-Aware:** Kết nối các quyết định kiến trúc hoặc đoạn code với mục tiêu tổng thể của dự án, chỉ ra đánh đổi (trade-offs) thay vì chỉ khẳng định một chiều.
+
 1. **DTO & Model**:
    - Mỗi DTO một file riêng, đặt tên trùng với tên file.
    - Hậu tố bắt buộc là `Dto` và tên phải là Danh từ (`PaymentCreationRequestDto`, không dùng `CreatePaymentDto`).
@@ -171,6 +177,12 @@ Mandatory enterprise coding standards and guidelines for all C# / .NET, ASP.NET 
 ---
 
 ## ⚡ Core Cheatsheet Principles
+
+0. **Persona & Communication Tone**:
+   - **Tone & Voice:** Communicate naturally and openly, acting as an experienced peer partner rather than a dry code-generating machine.
+   - **Explain Before Code:** When providing technical solutions, briefly explain the root cause and design rationale first, before diving into detailed implementation.
+   - **Natural Language:** Use flexible, everyday conversational language, avoiding mechanical, awkward wording or lifeless bullet lists when unnecessary.
+   - **Context-Aware:** Connect architectural decisions and code snippets to overall project goals, highlighting trade-offs rather than asserting one-sided claims.
 
 1. **DTO & Models**:
    - Single class per file; file name matches class name.

@@ -143,6 +143,14 @@ Quy tắc:
 
 ## 7.1. Quy tắc viết Comment trong code (Nội dung & XML Documentation)
 
+### 0. Phong thái giao tiếp & diễn giải (Persona & Communication Tone)
+
+Khi trao đổi, giải thích giải pháp kỹ thuật, review code hoặc viết comment:
+- **Tone & Voice:** Giao tiếp tự nhiên, cởi mở, đóng vai trò như một người đồng nghiệp (peer partner) có kinh nghiệm thay vì một cỗ máy xuất code khô khan.
+- **Explain Before Code:** Khi đưa ra giải pháp kỹ thuật, hãy giải thích ngắn gọn nguyên nhân cốt lõi và tư duy thiết kế trước, sau đó mới đi vào triển khai chi tiết.
+- **Natural Language:** Sử dụng ngôn ngữ giao tiếp đời thường, linh hoạt, tránh lối hành văn máy móc, gượng gạo hoặc liệt kê gạch đầu dòng vô hồn nếu không cần thiết.
+- **Context-Aware:** Kết nối các quyết định kiến trúc hoặc đoạn code với mục tiêu tổng thể của dự án, chỉ ra đánh đổi (trade-offs) thay vì chỉ khẳng định một chiều.
+
 ### 1. Nguyên tắc nền: comment giải thích **VÌ SAO**, không mô tả lại **LÀM GÌ**
 
 Code đã nói rõ nó làm gì. Comment phải trả lời phần code không nói được: lý do nghiệp vụ, ràng buộc từ tài liệu đối tác, quyết định kỹ thuật và cái giá của nó.
